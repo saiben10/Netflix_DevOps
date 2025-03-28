@@ -1,8 +1,8 @@
 pipeline{
     agent any
     tools{
-        jdk 'jdk17'
-        nodejs 'node16'
+        jdk 'java'
+        nodejs 'nodejs'
     }
     environment {
         SCANNER_HOME=tool 'sonar-scanner'
@@ -15,14 +15,17 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/Aj7Ay/Netflix-clone.git'
+                git branch: 'main', url: 'https://github.com/saiben10/Netflix_DevOps.git'
             }
         }
         stage("Sonarqube Analysis "){
             steps{
                 withSonarQubeEnv('sonar-server') {
                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Netflix \
-                    -Dsonar.projectKey=Netflix '''
+                    -Dsonar.projectKey=Netflix \
+  		    -Dsonar.sources=. \
+  		    -Dsonar.host.url=http://35.89.149.241:9000 \
+  		    -Dsonar.login=sqp_cdcb6560302b8e2133b0d2c36623a1f2d9318623
                 }
             }
         }
@@ -91,7 +94,7 @@ pipeline{
             body: "Project: ${env.JOB_NAME}<br/>" +
                 "Build Number: ${env.BUILD_NUMBER}<br/>" +
                 "URL: ${env.BUILD_URL}<br/>",
-            to: 'iambatmanthegoat@gmail.com',                                #change mail here
+            to: 'saiben1204@gmail.com',                                #change mail here
             attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
         }
     }
